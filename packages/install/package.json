@@ -1,0 +1,24 @@
+{
+  "name": "@rovls/install",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "wangyl <wylyzyk1028@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "node ./__tests__/install.test.js"
+  },
+  "dependencies": {
+    "@rovls/command": "^0.0.0",
+    "@rovls/utils": "^0.0.0"
+  },
+  "type": "module"
+}
