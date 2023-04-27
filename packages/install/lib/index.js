@@ -64,6 +64,8 @@ class InstallCommand extends Command {
     await this.doSearch()
   }
 
+  tagList = []
+
   async doSearch () {
     let searchResult = null;
     let count = null;
@@ -109,7 +111,44 @@ class InstallCommand extends Command {
       await this.prevPage()
     } else {
       // 下载项目
+      const tl = await this.getTagsForRepo(keyword);
+      let per_page = 10;
+      const list = tl.map(t => ({ name: t.name, value: t.name }));
+      let index = 0;
+      while (index < list.length) {
+        const tempArr = list.slice(index, index + per_page);
+        if (index >= 0 || index <= list.length) {
+          tempArr.push({ name: "下一页", value: NEXT_PAGE })
+        }
+        if (index > 0) {
+          tempArr.unshift({ name: "上一页", value: PREV_PAGE })
+        }
+        this.tagList.push(tempArr)
+        index += per_page
+      }
+      const tag = await this.makeTagList(this.tagList[this.tagPage]);
+      console.log('tag', tag)
     }
+  }
+
+  async getTagsForRepo (repoName) {
+    return await this.gitAPI.searchTags(repoName);
+  }
+
+  tagPage = 0;  // 起始第一页
+  async makeTagList (list) {
+    const searchTag = await makeList({
+      message: "请选择要对应的tag",
+      choices: list
+    })
+    if (searchTag === PREV_PAGE) {
+      this.tagPage--
+    } else if (searchTag === NEXT_PAGE && this.tagPage < this.tagList.length - 1) {
+      this.tagPage++
+    } else {
+      return '已经没有下一页了'
+    }
+    await this.makeTagList(this.tagList[this.tagPage])
   }
 
   async nextPage () {

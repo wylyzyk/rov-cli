@@ -21,7 +21,6 @@ export const http = async (endpoint, { data, token, headers, ...customConfig }) 
 
   if (config.method.toUpperCase() === "GET") {
     endpoint += `?${ qs.stringify(data) }`;
-    console.log(`${apiUrl}/${endpoint}`)
   } else {
     config.body = JSON.stringify(data || {});
   }
